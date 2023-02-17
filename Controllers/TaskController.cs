@@ -7,6 +7,7 @@ using TmTaskManagerApi.Models;
 using TmTaskManagerApi.HttpHelpers;
 using TmTaskManagerApi.HttpHelpers.Models;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Cors;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -14,6 +15,7 @@ namespace TmTaskManagerApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [EnableCors("MyPolicy")]
     public class TaskController : ControllerBase
     {
         private ITaskLogic TaskLogic { get; set; }
@@ -24,6 +26,7 @@ namespace TmTaskManagerApi.Controllers
 
         // GET: api/<TaskController>
         [HttpGet]
+        [EnableCors("MyPolicy")]
         public async Task<ApiResponse<List<Tasks>>?> GetAsync()
         {
             ApiResponse<List<Tasks>>? response = null;
