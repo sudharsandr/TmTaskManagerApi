@@ -5,7 +5,7 @@
 -- Dumped from database version 13.2
 -- Dumped by pg_dump version 14.1
 
--- Started on 2023-02-10 19:31:33
+-- Started on 2023-02-17 13:30:51
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -32,7 +32,8 @@ CREATE TABLE public.comment (
     task_id bigint NOT NULL,
     comment_history_id bigint NOT NULL,
     created_on timestamp without time zone NOT NULL,
-    updated_on timestamp without time zone NOT NULL
+    updated_on timestamp without time zone NOT NULL,
+    is_active boolean DEFAULT true NOT NULL
 );
 
 
@@ -72,7 +73,7 @@ CREATE SEQUENCE public.comment_history_id_seq
 ALTER TABLE public.comment_history_id_seq OWNER TO postgres;
 
 --
--- TOC entry 3060 (class 0 OID 0)
+-- TOC entry 3062 (class 0 OID 0)
 -- Dependencies: 210
 -- Name: comment_history_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -97,7 +98,7 @@ CREATE SEQUENCE public.comment_id_seq
 ALTER TABLE public.comment_id_seq OWNER TO postgres;
 
 --
--- TOC entry 3061 (class 0 OID 0)
+-- TOC entry 3063 (class 0 OID 0)
 -- Dependencies: 208
 -- Name: comment_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -137,7 +138,7 @@ CREATE SEQUENCE public.comment_type_id_seq
 ALTER TABLE public.comment_type_id_seq OWNER TO postgres;
 
 --
--- TOC entry 3062 (class 0 OID 0)
+-- TOC entry 3064 (class 0 OID 0)
 -- Dependencies: 212
 -- Name: comment_type_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -177,7 +178,7 @@ CREATE SEQUENCE public.status_id_seq
 ALTER TABLE public.status_id_seq OWNER TO postgres;
 
 --
--- TOC entry 3063 (class 0 OID 0)
+-- TOC entry 3065 (class 0 OID 0)
 -- Dependencies: 204
 -- Name: status_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -200,7 +201,8 @@ CREATE TABLE public.task (
     created_date timestamp without time zone NOT NULL,
     required_date timestamp without time zone,
     created_on timestamp without time zone NOT NULL,
-    updated_on timestamp without time zone NOT NULL
+    updated_on timestamp without time zone NOT NULL,
+    is_active boolean DEFAULT true NOT NULL
 );
 
 
@@ -223,7 +225,7 @@ CREATE SEQUENCE public.task_id_seq
 ALTER TABLE public.task_id_seq OWNER TO postgres;
 
 --
--- TOC entry 3064 (class 0 OID 0)
+-- TOC entry 3066 (class 0 OID 0)
 -- Dependencies: 200
 -- Name: task_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -263,7 +265,7 @@ CREATE SEQUENCE public.task_type_id_seq
 ALTER TABLE public.task_type_id_seq OWNER TO postgres;
 
 --
--- TOC entry 3065 (class 0 OID 0)
+-- TOC entry 3067 (class 0 OID 0)
 -- Dependencies: 202
 -- Name: task_type_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -303,7 +305,7 @@ CREATE SEQUENCE public.user_id_seq
 ALTER TABLE public.user_id_seq OWNER TO postgres;
 
 --
--- TOC entry 3066 (class 0 OID 0)
+-- TOC entry 3068 (class 0 OID 0)
 -- Dependencies: 206
 -- Name: user_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -312,7 +314,7 @@ ALTER SEQUENCE public.user_id_seq OWNED BY public."user".id;
 
 
 --
--- TOC entry 2896 (class 2604 OID 48579)
+-- TOC entry 2897 (class 2604 OID 48579)
 -- Name: comment id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -320,7 +322,7 @@ ALTER TABLE ONLY public.comment ALTER COLUMN id SET DEFAULT nextval('public.comm
 
 
 --
--- TOC entry 2897 (class 2604 OID 48588)
+-- TOC entry 2899 (class 2604 OID 48588)
 -- Name: comment_history id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -328,7 +330,7 @@ ALTER TABLE ONLY public.comment_history ALTER COLUMN id SET DEFAULT nextval('pub
 
 
 --
--- TOC entry 2898 (class 2604 OID 48599)
+-- TOC entry 2900 (class 2604 OID 48599)
 -- Name: comment_type id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -336,7 +338,7 @@ ALTER TABLE ONLY public.comment_type ALTER COLUMN id SET DEFAULT nextval('public
 
 
 --
--- TOC entry 2894 (class 2604 OID 48531)
+-- TOC entry 2895 (class 2604 OID 48531)
 -- Name: status id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -352,7 +354,7 @@ ALTER TABLE ONLY public.task ALTER COLUMN id SET DEFAULT nextval('public.task_id
 
 
 --
--- TOC entry 2893 (class 2604 OID 48520)
+-- TOC entry 2894 (class 2604 OID 48520)
 -- Name: task_type id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -360,7 +362,7 @@ ALTER TABLE ONLY public.task_type ALTER COLUMN id SET DEFAULT nextval('public.ta
 
 
 --
--- TOC entry 2895 (class 2604 OID 48542)
+-- TOC entry 2896 (class 2604 OID 48542)
 -- Name: user id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -368,7 +370,7 @@ ALTER TABLE ONLY public."user" ALTER COLUMN id SET DEFAULT nextval('public.user_
 
 
 --
--- TOC entry 2915 (class 2606 OID 48593)
+-- TOC entry 2917 (class 2606 OID 48593)
 -- Name: comment_history comment_history_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -377,7 +379,7 @@ ALTER TABLE ONLY public.comment_history
 
 
 --
--- TOC entry 2911 (class 2606 OID 48581)
+-- TOC entry 2913 (class 2606 OID 48581)
 -- Name: comment comment_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -386,7 +388,7 @@ ALTER TABLE ONLY public.comment
 
 
 --
--- TOC entry 2918 (class 2606 OID 48604)
+-- TOC entry 2920 (class 2606 OID 48604)
 -- Name: comment_type comment_type_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -395,7 +397,7 @@ ALTER TABLE ONLY public.comment_type
 
 
 --
--- TOC entry 2907 (class 2606 OID 48536)
+-- TOC entry 2909 (class 2606 OID 48536)
 -- Name: status status_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -404,7 +406,7 @@ ALTER TABLE ONLY public.status
 
 
 --
--- TOC entry 2903 (class 2606 OID 48514)
+-- TOC entry 2905 (class 2606 OID 48514)
 -- Name: task task_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -413,7 +415,7 @@ ALTER TABLE ONLY public.task
 
 
 --
--- TOC entry 2905 (class 2606 OID 48525)
+-- TOC entry 2907 (class 2606 OID 48525)
 -- Name: task_type task_type_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -422,7 +424,7 @@ ALTER TABLE ONLY public.task_type
 
 
 --
--- TOC entry 2909 (class 2606 OID 48547)
+-- TOC entry 2911 (class 2606 OID 48547)
 -- Name: user user_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -431,7 +433,7 @@ ALTER TABLE ONLY public."user"
 
 
 --
--- TOC entry 2912 (class 1259 OID 48610)
+-- TOC entry 2914 (class 1259 OID 48610)
 -- Name: fki_comment_history_id_FK; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -439,7 +441,7 @@ CREATE INDEX "fki_comment_history_id_FK" ON public.comment USING btree (comment_
 
 
 --
--- TOC entry 2913 (class 1259 OID 48622)
+-- TOC entry 2915 (class 1259 OID 48622)
 -- Name: fki_comment_task_taskid_FK; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -447,7 +449,7 @@ CREATE INDEX "fki_comment_task_taskid_FK" ON public.comment USING btree (task_id
 
 
 --
--- TOC entry 2916 (class 1259 OID 48616)
+-- TOC entry 2918 (class 1259 OID 48616)
 -- Name: fki_history_type_typeid_FK; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -455,7 +457,7 @@ CREATE INDEX "fki_history_type_typeid_FK" ON public.comment_history USING btree 
 
 
 --
--- TOC entry 2899 (class 1259 OID 48559)
+-- TOC entry 2901 (class 1259 OID 48559)
 -- Name: fki_task_status_statusid_FK; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -463,7 +465,7 @@ CREATE INDEX "fki_task_status_statusid_FK" ON public.task USING btree (status_id
 
 
 --
--- TOC entry 2900 (class 1259 OID 48553)
+-- TOC entry 2902 (class 1259 OID 48553)
 -- Name: fki_task_type_typeid_FK; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -471,7 +473,7 @@ CREATE INDEX "fki_task_type_typeid_FK" ON public.task USING btree (task_type);
 
 
 --
--- TOC entry 2901 (class 1259 OID 48565)
+-- TOC entry 2903 (class 1259 OID 48565)
 -- Name: fki_task_user_userid_FK; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -479,7 +481,7 @@ CREATE INDEX "fki_task_user_userid_FK" ON public.task USING btree (assigned_to);
 
 
 --
--- TOC entry 2922 (class 2606 OID 48605)
+-- TOC entry 2924 (class 2606 OID 48605)
 -- Name: comment comment_history_id_FK; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -488,7 +490,7 @@ ALTER TABLE ONLY public.comment
 
 
 --
--- TOC entry 2923 (class 2606 OID 48617)
+-- TOC entry 2925 (class 2606 OID 48617)
 -- Name: comment comment_task_taskid_FK; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -497,7 +499,7 @@ ALTER TABLE ONLY public.comment
 
 
 --
--- TOC entry 2924 (class 2606 OID 48611)
+-- TOC entry 2926 (class 2606 OID 48611)
 -- Name: comment_history history_type_typeid_FK; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -506,7 +508,7 @@ ALTER TABLE ONLY public.comment_history
 
 
 --
--- TOC entry 2920 (class 2606 OID 48554)
+-- TOC entry 2922 (class 2606 OID 48554)
 -- Name: task task_status_statusid_FK; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -515,7 +517,7 @@ ALTER TABLE ONLY public.task
 
 
 --
--- TOC entry 2919 (class 2606 OID 48548)
+-- TOC entry 2921 (class 2606 OID 48548)
 -- Name: task task_type_typeid_FK; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -524,7 +526,7 @@ ALTER TABLE ONLY public.task
 
 
 --
--- TOC entry 2921 (class 2606 OID 48560)
+-- TOC entry 2923 (class 2606 OID 48560)
 -- Name: task task_user_userid_FK; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -532,7 +534,7 @@ ALTER TABLE ONLY public.task
     ADD CONSTRAINT "task_user_userid_FK" FOREIGN KEY (assigned_to) REFERENCES public."user"(id) NOT VALID;
 
 
--- Completed on 2023-02-10 19:31:33
+-- Completed on 2023-02-17 13:30:51
 
 --
 -- PostgreSQL database dump complete
