@@ -2,9 +2,8 @@
 
 namespace TmTaskManagerApi.Models
 {
-    public class Tasks
+    public class Tasks : CommonAttributes
     {
-        public int id { get; set; }
         public string? title { get; set; }
 
         public string? description { get; set; }
@@ -19,9 +18,7 @@ namespace TmTaskManagerApi.Models
 
         public DateTime required_date { get; set; }
 
-        public DateTime created_on { get; set; }
-
-        public DateTime updated_on { get; set; }
+        
 
     }
 }

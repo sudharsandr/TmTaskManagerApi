@@ -7,6 +7,7 @@ using TmTaskManagerApi.Models;
 using TmTaskManagerApi.HttpHelpers;
 using TmTaskManagerApi.HttpHelpers.Models;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Cors;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -14,6 +15,7 @@ namespace TmTaskManagerApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [EnableCors("MyPolicy")]
     public class TaskController : ControllerBase
     {
         private ITaskLogic TaskLogic { get; set; }
@@ -24,6 +26,7 @@ namespace TmTaskManagerApi.Controllers
 
         // GET: api/<TaskController>
         [HttpGet]
+        [EnableCors("MyPolicy")]
         public async Task<ApiResponse<List<Tasks>>?> GetAsync()
         {
             ApiResponse<List<Tasks>>? response = null;
@@ -86,7 +89,7 @@ namespace TmTaskManagerApi.Controllers
                 else
                 {
                     addResponse = await TaskLogic.AddTaskAsync(taskData);
-                    if(!addResponse)
+                    if (!addResponse)
                         error = ApiConstants.UnhandledError;
                 }
                 response = new ResponseGenerator<bool>().
@@ -101,14 +104,74 @@ namespace TmTaskManagerApi.Controllers
 
         // PUT api/<TaskController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public async Task<ApiResponse<bool>?> PutAsync(int id, [FromBody] Tasks taskData)
         {
+            ApiResponse<bool>? response = null;
+            string? error = null;
+            string? remarks = null;
+            bool addResponse = false;
+            try
+            {
+                if (taskData.title.IsNullOrEmptyOrWhiteSpace() ||
+                    taskData.description.IsNullOrEmptyOrWhiteSpace() ||
+                    taskData.task_type.IsZero() ||
+                    taskData.status_id.IsZero() ||
+                    taskData.assigned_to.IsZero() ||
+                    taskData.required_date < DateTime.Now)
+                {
+                    error = ApiConstants.ValuesMissing;
+                }
+                else
+                {
+                    addResponse = await TaskLogic.UpdateTaskAsync(taskData);
+                    if (!addResponse)
+                        error = ApiConstants.UnhandledError;
+                }
+                response = new ResponseGenerator<bool>().
+                    GenerateResponse(addResponse, error, remarks: remarks);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+            return response;
         }
 
         // DELETE api/<TaskController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<ApiResponse<bool>?> DeleteAsync(int id)
         {
+            ApiResponse<bool>? response = null;
+            string? error = null;
+            string? remarks = null;
+            bool deleteResponse = false;
+            try
+            {
+                if (id == 0)
+                {
+                    error = ApiConstants.TaskIdNeeded;
+                }
+                else
+                {
+                    var taskObj = await TaskLogic.GetTaskAsync(id);
+                    if (taskObj == null)
+                        error = ApiConstants.NoTaskFound;
+                    else
+                    {
+
+                        deleteResponse = await TaskLogic.DeleteTaskAsync(id);
+                        if (!deleteResponse)
+                            error = ApiConstants.UnhandledError;
+                    }
+                }
+                response = new ResponseGenerator<bool>().
+                    GenerateResponse(deleteResponse, error, remarks: remarks);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+            return response;
         }
     }
 }

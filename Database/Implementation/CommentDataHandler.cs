@@ -1,30 +1,29 @@
 ﻿using Dapper;
 using Npgsql;
-using System.Threading.Tasks;
 using TmTaskManagerApi.Database.Structure;
 using TmTaskManagerApi.Models;
 
 namespace TmTaskManagerApi.Database.Implementation
 {
-    public class TaskDataHandler : ITaskDataHandler
+    public class CommentDataHandler: ICommentDataHandler
     {
         private string connectionStr = String.Empty;
 
-        public TaskDataHandler()
-        { 
+        public CommentDataHandler()
+        {
             connectionStr = DatabaseConstants.DbConnectionStr;
         }
 
-        
-        public async Task<List<Tasks>> GetAllEntryAsync()
+
+        public async Task<List<Comment>> GetAllEntryAsync()
         {
-            List<Tasks> taskList = new List<Tasks>();
+            List<Comment> taskList = new List<Comment>();
             try
             {
                 using (var dbConnection = new NpgsqlConnection(this.connectionStr))
                 {
                     dbConnection.Open();
-                    var queryResult = await dbConnection.QueryAsync<Tasks>(DatabaseConstants.AllTask);
+                    var queryResult = await dbConnection.QueryAsync<Comment>(DatabaseConstants.AllComment);
                     taskList = queryResult.ToList();
                 };
             }
@@ -35,16 +34,16 @@ namespace TmTaskManagerApi.Database.Implementation
             return taskList;
         }
 
-        public async Task<Tasks?> GetSpecificEntryAsync(int id)
+        public async Task<Comment?> GetSpecificEntryAsync(int id)
         {
-            Tasks ?taskObj = new Tasks();
+            Comment? taskObj = new Comment();
             try
             {
                 using (var dbConnection = new NpgsqlConnection(this.connectionStr))
                 {
                     dbConnection.Open();
                     var query = string.Format(DatabaseConstants.SpecificTask, id.ToString());
-                    var queryResult = await dbConnection.QueryAsync<Tasks>(query);
+                    var queryResult = await dbConnection.QueryAsync<Comment>(query);
                     taskObj = queryResult.FirstOrDefault();
                 };
             }
@@ -55,7 +54,7 @@ namespace TmTaskManagerApi.Database.Implementation
             return taskObj;
         }
 
-        public async Task<bool> AddEntryAsync(Tasks taskdata)
+        public async Task<bool> AddEntryAsync(Comment taskdata)
         {
             object queryResult;
             try
@@ -63,18 +62,11 @@ namespace TmTaskManagerApi.Database.Implementation
                 using (var dbConnection = new NpgsqlConnection(this.connectionStr))
                 {
                     dbConnection.Open();
-                    var query = string.Format(DatabaseConstants.AddTask, 
-                        taskdata.title, 
-                        taskdata.description, 
-                        taskdata.task_type, 
-                        taskdata.status_id,
-                        taskdata.assigned_to,
-                        taskdata.created_date,
-                        taskdata.required_date,
+                    var query = string.Format(DatabaseConstants.AddTask,
                         taskdata.created_on,
                         taskdata.updated_on);
                     queryResult = await dbConnection.QueryAsync<object>(query);
-                    
+
                 };
             }
             catch (Exception ex)
@@ -85,7 +77,7 @@ namespace TmTaskManagerApi.Database.Implementation
             return true;
         }
 
-        public async Task<bool> UpdateEntryAsync(Tasks taskdata)
+        public async Task<bool> UpdateEntryAsync(Comment taskdata)
         {
 
             object queryResult;
@@ -95,12 +87,6 @@ namespace TmTaskManagerApi.Database.Implementation
                 {
                     dbConnection.Open();
                     var query = string.Format(DatabaseConstants.UpdateTask,
-                        taskdata.title,
-                        taskdata.description,
-                        taskdata.task_type,
-                        taskdata.status_id,
-                        taskdata.assigned_to,
-                        taskdata.required_date,
                         taskdata.updated_on,
                         taskdata.id);
                     queryResult = await dbConnection.QueryAsync<object>(query);
@@ -115,7 +101,7 @@ namespace TmTaskManagerApi.Database.Implementation
             return true;
         }
 
-       
+
 
         public async Task<bool> DeleteEntryAsync(int id)
         {
@@ -126,7 +112,7 @@ namespace TmTaskManagerApi.Database.Implementation
                 {
                     dbConnection.Open();
                     var currentTime = DateTime.Now.ToString();
-                    var query = string.Format(DatabaseConstants.DeleteTask, currentTime,  id);
+                    var query = string.Format(DatabaseConstants.DeleteTask, currentTime, id);
                     queryResult = await dbConnection.QueryAsync<object>(query);
 
                 };

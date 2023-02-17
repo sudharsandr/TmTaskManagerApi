@@ -27,7 +27,7 @@ namespace TmTaskManagerApi.BusinessLogic.Implementation
             List<Tasks> taskList = new List<Tasks>();
             try
             {
-                taskList = await taskDataHandler.GetAllTaskAsync();
+                taskList = await taskDataHandler.GetAllEntryAsync();
             }
             catch (Exception ex)
             {
@@ -41,7 +41,7 @@ namespace TmTaskManagerApi.BusinessLogic.Implementation
             Tasks? taskObj = new Tasks();
             try
             {
-                taskObj = await taskDataHandler.GetTaskAsync(taskId);
+                taskObj = await taskDataHandler.GetSpecificEntryAsync(taskId);
             }
             catch (Exception ex)
             {
@@ -58,7 +58,7 @@ namespace TmTaskManagerApi.BusinessLogic.Implementation
                 taskdata.created_on = DateTime.Now;
                 taskdata.created_date = DateTime.Now;
                 taskdata.updated_on = DateTime.Now;
-                addResponse = await taskDataHandler.AddTaskAsync(taskdata);
+                addResponse = await taskDataHandler.AddEntryAsync(taskdata);
             }
             catch (Exception ex)
             {
@@ -67,13 +67,32 @@ namespace TmTaskManagerApi.BusinessLogic.Implementation
             return addResponse;
         }
 
-        public Task<bool> DeleteTaskAsync(int id)
+        public async Task<bool> DeleteTaskAsync(int id)
         {
-            throw new NotImplementedException();
+            bool deleteResponse = false;
+            try
+            {
+                deleteResponse = await taskDataHandler.DeleteEntryAsync(id);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+            return deleteResponse;
         }
-        public Task<bool> UpdateTaskAsync(Tasks taskdata)
+        public async Task<bool> UpdateTaskAsync(Tasks taskdata)
         {
-            throw new NotImplementedException();
+            bool updateResponse = false;
+            try
+            {
+                taskdata.updated_on = DateTime.Now;
+                updateResponse = await taskDataHandler.UpdateEntryAsync(taskdata);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+            return updateResponse;
         }
     }
 }
